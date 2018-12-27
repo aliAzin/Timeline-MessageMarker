@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class TestComponent : MonoBehaviour
 {
     public void PrintString(string str)

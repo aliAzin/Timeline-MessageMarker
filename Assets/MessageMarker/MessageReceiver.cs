@@ -2,7 +2,9 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
+[ExecuteInEditMode]
 public class MessageReceiver : MonoBehaviour, INotificationReceiver
 {
     public void OnNotify(Playable origin, INotification notification, object context)
@@ -14,9 +16,11 @@ public class MessageReceiver : MonoBehaviour, INotificationReceiver
             return;
         var methodToCall = message.method;
         var argument = ArgumentForMessage(message, origin.GetGraph().GetResolver());
-        
-        if (EditorApplication.isPlaying)
+
+        if (EditorApplication.isPlaying || (message.flags & NotificationFlags.TriggerInEditMode) != 0)        
+        {
             SendMessage(methodToCall, argument);
+        }
     }
 
     static object ArgumentForMessage(Message emitter, IExposedPropertyTable resolver)

@@ -14,6 +14,7 @@ public enum ParameterType
     None
 }
 
+[ExecuteInEditMode]
 [Serializable, DisplayName("Message Marker")]
 public class Message : Marker, INotification, INotificationOptionProvider 
 {
@@ -26,7 +27,13 @@ public class Message : Marker, INotification, INotificationOptionProvider
     public string String;
     public float Float;
     public ExposedReference<Object> Object;
-    
+
+    public override void OnInitialize(TrackAsset aPent)
+    {
+        //Debug.Log("Init");
+        base.OnInitialize(aPent);
+    }
+
     PropertyName INotification.id
     {
         get
@@ -35,12 +42,14 @@ public class Message : Marker, INotification, INotificationOptionProvider
         }
     }
     
-    NotificationFlags INotificationOptionProvider.flags
+    public NotificationFlags flags
     {
         get
         {
-            return (retroactive ? NotificationFlags.Retroactive : default(NotificationFlags)) |
-                (emitOnce ? NotificationFlags.TriggerOnce : default(NotificationFlags));
+            return 
+                (retroactive ? NotificationFlags.Retroactive : default(NotificationFlags)) | 
+                (emitOnce ? NotificationFlags.TriggerOnce : default(NotificationFlags)) | 
+                NotificationFlags.TriggerInEditMode;
         }
     }
 }
