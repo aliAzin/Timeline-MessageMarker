@@ -43,13 +43,24 @@ public class MessageInspector : Editor
 
         var marker = target as Marker;
         var parent = marker.parent;
+
+        if (parent == null)
+            return;
+
+        var dir = TimelineEditor.inspectedDirector;
+        if (dir == null)
+            return;
+        
         var boundObj = TimelineEditor.inspectedDirector.GetGenericBinding(parent);
 
         using (var changeScope = new EditorGUI.ChangeCheckScope())
         {
             EditorGUILayout.PropertyField(m_Time);
 
-            DrawMethodAndArguments(GetGameObject(boundObj));
+            if (boundObj != null)
+            {
+                DrawMethodAndArguments(GetGameObject(boundObj));
+            }
 
             EditorGUILayout.PropertyField(m_Retroactive);
             EditorGUILayout.PropertyField(m_EmitOnce);
