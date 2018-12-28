@@ -39,4 +39,6 @@ public class MessageReceiver : MonoBehaviour, INotificationReceiver
                 return null;
         }
     }
+
+
 }

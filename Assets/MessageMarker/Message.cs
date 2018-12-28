@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Net;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -16,7 +17,7 @@ public enum ParameterType
 
 [ExecuteInEditMode]
 [Serializable, DisplayName("Message Marker")]
-public class Message : Marker, INotification, INotificationOptionProvider 
+public class Message : Marker, INotification, INotificationOptionProvider
 {
     public string method;
     public bool retroactive;
@@ -28,28 +29,11 @@ public class Message : Marker, INotification, INotificationOptionProvider
     public float Float;
     public ExposedReference<Object> Object;
 
-    public override void OnInitialize(TrackAsset aPent)
-    {
-        //Debug.Log("Init");
-        base.OnInitialize(aPent);
-    }
+    PropertyName INotification.id => new PropertyName(method);
 
-    PropertyName INotification.id
-    {
-        get
-        {
-            return new PropertyName(method);
-        }
-    }
-    
-    public NotificationFlags flags
-    {
-        get
-        {
-            return 
-                (retroactive ? NotificationFlags.Retroactive : default(NotificationFlags)) | 
-                (emitOnce ? NotificationFlags.TriggerOnce : default(NotificationFlags)) | 
-                NotificationFlags.TriggerInEditMode;
-        }
-    }
+    public NotificationFlags flags =>
+        (retroactive ? NotificationFlags.Retroactive : default) | 
+        (emitOnce ? NotificationFlags.TriggerOnce : default) | 
+        NotificationFlags.TriggerInEditMode;
+
 }
